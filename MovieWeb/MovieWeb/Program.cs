@@ -77,12 +77,26 @@ builder.Services.AddAuthorization();
 builder.Services.AddSignalR();
 
 // 5) CORS (dev) – cho phép call từ client local
-builder.Services.AddCors(opt =>
+//builder.Services.AddCors(opt =>
+//{
+//    opt.AddPolicy("Dev", p => p
+//        .AllowAnyHeader()
+//        .AllowAnyMethod()
+//        .WithOrigins("http://localhost:3000", "http://localhost:5173", "https://localhost:5173")
+//        .AllowCredentials());
+//});
+
+builder.Services.AddCors(options =>
 {
-    opt.AddPolicy("Dev", p => p
+    options.AddPolicy("FrontendDev",
+        policy => policy
+        .WithOrigins(
+            "http://localhost:5173",
+            "https://test-deploy-m-movie.vercel.app"
+        )
         .AllowAnyHeader()
         .AllowAnyMethod()
-        .WithOrigins("http://localhost:3000", "http://localhost:5173", "https://localhost:5173")
+        .SetIsOriginAllowed(origin => true)
         .AllowCredentials());
 });
 
@@ -124,14 +138,14 @@ builder.Services.Configure<TmdbOptions>(builder.Configuration.GetSection("Tmdb")
 builder.Services.AddApplicationServices();
 
 // CORS
-builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy("FrontendDev", p =>
-        p.WithOrigins("http://localhost:5173") // React dev server
-         .AllowAnyHeader()
-         .AllowAnyMethod()
-         .AllowCredentials());
-});
+//builder.Services.AddCors(opts =>
+//{
+//    opts.AddPolicy("FrontendDev", p =>
+//        p.WithOrigins("http://localhost:5173") // React dev server
+//         .AllowAnyHeader()
+//         .AllowAnyMethod()
+//         .AllowCredentials());
+//});
 
 var app = builder.Build();
 
