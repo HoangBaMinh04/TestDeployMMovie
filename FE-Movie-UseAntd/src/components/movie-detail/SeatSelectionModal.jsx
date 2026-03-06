@@ -93,7 +93,7 @@ function summarizeSeats(seats) {
 
 function parseErrorMessage(
   error,
-  fallback = "Có lỗi xảy ra. Vui lòng thử lại."
+  fallback = "Có lỗi xảy ra. Vui lòng thử lại.",
 ) {
   if (!error) return fallback;
 
@@ -183,7 +183,7 @@ export default function SeatSelectionModal({
   const movieTitle = useMemo(() => pickMovieTitle(movie), [movie]);
   const showtimeDateText = useMemo(
     () => buildShowtimeDateText(showtime),
-    [showtime]
+    [showtime],
   );
 
   const sortedSeats = useMemo(() => {
@@ -208,7 +208,7 @@ export default function SeatSelectionModal({
     if (!sortedSeats.length) return 0;
     return sortedSeats.reduce(
       (max, seat) => (seat.col && seat.col > max ? seat.col : max),
-      0
+      0,
     );
   }, [layout, sortedSeats]);
 
@@ -218,7 +218,7 @@ export default function SeatSelectionModal({
 
   const seatSummary = useMemo(
     () => summarizeSeats(selectedSeats),
-    [selectedSeats]
+    [selectedSeats],
   );
 
   const baseSeatPrice = useMemo(() => {
@@ -244,7 +244,7 @@ export default function SeatSelectionModal({
 
       return Math.round(baseSeatPrice);
     },
-    [baseSeatPrice]
+    [baseSeatPrice],
   );
 
   const subtotal = useMemo(() => {
@@ -279,7 +279,7 @@ export default function SeatSelectionModal({
       createdOrder.originalAmount,
       createdOrder.baseAmount,
       createdOrder.totalAmount,
-      createdOrder.amountBeforeDiscount
+      createdOrder.amountBeforeDiscount,
     );
   }, [createdOrder]);
 
@@ -290,7 +290,7 @@ export default function SeatSelectionModal({
       createdOrder.discount,
       createdOrder.promotionDiscount,
       createdOrder.voucherDiscount,
-      createdOrder.totalDiscount
+      createdOrder.totalDiscount,
     );
   }, [createdOrder]);
 
@@ -302,7 +302,7 @@ export default function SeatSelectionModal({
       createdOrder.amount,
       createdOrder.total,
       createdOrder.finalPrice,
-      createdOrder.payableAmount
+      createdOrder.payableAmount,
     );
   }, [createdOrder]);
 
@@ -530,7 +530,8 @@ export default function SeatSelectionModal({
     }
 
     try {
-      const url = new URL("/payment/result", window.location.origin);
+      const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      const url = new URL("/payment/result", baseUrl);
       if (orderRef != null && orderRef !== "") {
         url.searchParams.set("order", String(orderRef));
       }
@@ -580,7 +581,7 @@ export default function SeatSelectionModal({
           code,
           orderAmount,
         },
-        {}
+        {},
       );
 
       if (result?.isValid) {
@@ -589,7 +590,7 @@ export default function SeatSelectionModal({
       } else {
         setPromotionResult(result || null);
         setPromotionError(
-          result?.errorMessage || "Mã khuyến mãi không hợp lệ hoặc đã hết hạn."
+          result?.errorMessage || "Mã khuyến mãi không hợp lệ hoặc đã hết hạn.",
         );
       }
     } catch (error) {
@@ -643,15 +644,15 @@ export default function SeatSelectionModal({
                 seat?.ShowtimeSeatId ??
                 seat?.code ??
                 seat?.label ??
-                null
+                null,
             )
             .map((value) => {
               if (value == null || value === "") return null;
               const numeric = Number(value);
               return Number.isFinite(numeric) ? numeric : value;
             })
-            .filter((value) => value !== null)
-        )
+            .filter((value) => value !== null),
+        ),
       );
 
       if (!seatIds.length) {
@@ -752,7 +753,7 @@ export default function SeatSelectionModal({
           normalizedOrder.orderID,
           normalizedOrder.orderCode,
           normalizedOrder.code,
-          normalizedOrder.reference
+          normalizedOrder.reference,
         );
       }
 
@@ -793,7 +794,7 @@ export default function SeatSelectionModal({
       setCreatedOrder(
         normalizedOrder && typeof normalizedOrder === "object"
           ? normalizedOrder
-          : rawOrderData
+          : rawOrderData,
       );
       setCreatedOrderId(finalOrderId);
 
@@ -805,7 +806,7 @@ export default function SeatSelectionModal({
             normalizedOrder.amount,
             normalizedOrder.finalPrice,
             normalizedOrder.payableAmount,
-            normalizedOrder.total
+            normalizedOrder.total,
           );
           if (value != null) {
             return Math.max(value, 0);
@@ -881,7 +882,7 @@ export default function SeatSelectionModal({
 
         setPaymentUrl(resolvedUrl);
         setCheckoutNotice(
-          "Quét mã QR bằng ứng dụng ngân hàng hoặc VNPay để hoàn tất thanh toán."
+          "Quét mã QR bằng ứng dụng ngân hàng hoặc VNPay để hoàn tất thanh toán.",
         );
       } catch (error) {
         console.error("Fetch payment URL error", error);
@@ -889,8 +890,8 @@ export default function SeatSelectionModal({
         setCheckoutError(
           parseErrorMessage(
             error,
-            "Không lấy được URL thanh toán. Vui lòng thử lại."
-          )
+            "Không lấy được URL thanh toán. Vui lòng thử lại.",
+          ),
         );
       } finally {
         setPaymentUrlLoading(false);
@@ -904,7 +905,7 @@ export default function SeatSelectionModal({
       setPaymentUrl("");
       setCheckoutNotice("");
       setCheckoutError(
-        parseErrorMessage(error, "Không tạo được đơn hàng. Vui lòng thử lại.")
+        parseErrorMessage(error, "Không tạo được đơn hàng. Vui lòng thử lại."),
       );
     } finally {
       setCheckoutLoading(false);
@@ -942,7 +943,7 @@ export default function SeatSelectionModal({
     } catch (error) {
       console.error("Refresh payment URL error", error);
       setCheckoutError(
-        parseErrorMessage(error, "Không làm mới được mã QR. Vui lòng thử lại.")
+        parseErrorMessage(error, "Không làm mới được mã QR. Vui lòng thử lại."),
       );
       setCheckoutNotice("");
     } finally {
@@ -965,7 +966,7 @@ export default function SeatSelectionModal({
     } catch (error) {
       console.error("Copy payment link error", error);
       setCheckoutError(
-        parseErrorMessage(error, "Không sao chép được liên kết thanh toán.")
+        parseErrorMessage(error, "Không sao chép được liên kết thanh toán."),
       );
       setCheckoutNotice("");
     }
@@ -993,7 +994,7 @@ export default function SeatSelectionModal({
       const newWindow = window.open(
         "",
         PAYMENT_GATEWAY_WINDOW_NAME,
-        "noopener,noreferrer"
+        "noopener,noreferrer",
       );
 
       if (newWindow) {
@@ -1016,8 +1017,8 @@ export default function SeatSelectionModal({
       setCheckoutError(
         parseErrorMessage(
           error,
-          "Không mở được cổng thanh toán. Vui lòng thử lại hoặc sao chép liên kết."
-        )
+          "Không mở được cổng thanh toán. Vui lòng thử lại hoặc sao chép liên kết.",
+        ),
       );
       setCheckoutNotice("");
     }
@@ -1387,6 +1388,6 @@ export default function SeatSelectionModal({
         </div>
       </div>
     </div>,
-    portalTarget
+    portalTarget,
   );
 }
