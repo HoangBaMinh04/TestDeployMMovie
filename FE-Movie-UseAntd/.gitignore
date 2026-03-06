@@ -1,0 +1,48 @@
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Node / React ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Vite cache
+.vite/
+.cache/
+
+# Env files
+.env
+.env.*.local
+
+# --- ASP.NET Core ---
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+*.db-shm
+*.db-wal
+
+# appsettings - chỉ giữ file chính, bỏ file môi trường
+appsettings.Development.json
+appsettings.Local.json
+
+# --- Editor / IDE ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --- System ---
+Thumbs.db

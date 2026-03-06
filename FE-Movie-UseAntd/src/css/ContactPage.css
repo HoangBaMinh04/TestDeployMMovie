@@ -1,0 +1,133 @@
+.contact-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #111;
+  color: #f5f5f5;
+}
+.contact-page__back {
+  margin: 32px 10vw 0;
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 152, 0, 0.6);
+  background: rgba(17, 17, 17, 0.6);
+  color: #ffb74d;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-page__back:hover,
+.contact-page__back:focus-visible {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ffe0b2;
+  border-color: rgba(255, 152, 0, 0.9);
+}
+
+.contact-page__back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.35);
+}
+
+.contact-page__main {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  padding: 48px 10vw;
+}
+
+.contact-page__info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-page__title {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.contact-page__subtitle {
+  margin: 0;
+  line-height: 1.6;
+  color: #d0d0d0;
+}
+
+.contact-page__details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.contact-page__detail h2 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: #ff9800;
+}
+
+.contact-page__detail a,
+.contact-page__detail span {
+  font-size: 1rem;
+  color: #f5f5f5;
+  text-decoration: none;
+}
+
+.contact-page__detail a:hover {
+  text-decoration: underline;
+}
+
+.contact-page__map {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 360px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.contact-page__map iframe {
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .contact-page__main {
+    padding: 40px 7vw;
+    gap: 24px;
+  }
+}
+
+.contact-page__back {
+  margin: 28px 7vw 0;
+}
+
+@media (max-width: 768px) {
+  .contact-page__back {
+    margin: 24px 24px 0;
+  }
+
+  .contact-page__main {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+  }
+
+  .contact-page__map {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-page__back {
+    margin: 20px 16px 0;
+  }
+
+  .contact-page__title {
+    font-size: 2rem;
+  }
+
+  .contact-page__main {
+    padding: 24px 16px;
+  }
+}

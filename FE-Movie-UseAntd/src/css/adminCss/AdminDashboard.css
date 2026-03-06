@@ -1,0 +1,51 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0f1116;
+}
+
+.adminDashboardPage .ant-layout-header {
+  line-height: normal;
+}
+
+.adminDashboard {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+  width: 100vw;
+  background: #0f1116;
+  color: #1a1d29;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+/* DASHBOARD – RESPONSIVE */
+@media (max-width: 1200px) {
+  .adminDashboardPage {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .adminDashboard__main {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .adminDashboard {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .adminDashboard__summary {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .adminDashboard__search input {
+    width: 100%;
+  }
+  .adminDashboard__user {
+    width: 100%;
+    justify-content: center;
+  }
+}

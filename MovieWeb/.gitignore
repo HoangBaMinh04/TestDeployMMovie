@@ -1,0 +1,13 @@
+# Visual Studio / .NET
+.vs/
+*.user
+*.suo
+
+# Build outputs
+bin/
+obj/
+
+# Publish artifacts
+**/Publish/
+
+appsettings.Development.json
