@@ -223,6 +223,7 @@ function App() {
         <Route path="/movies/:movieSlug" element={<MovieDetailPage />} />
 
         <Route path="/payment/result" element={<PaymentResultPage />} />
+        <Route path="/payment-result" element={<PaymentResultPage />} />
         <Route path="/contact" element={<ContactPage />} />
 
         <Route
