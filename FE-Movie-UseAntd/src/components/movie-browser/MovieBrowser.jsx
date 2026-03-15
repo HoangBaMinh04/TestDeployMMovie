@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Layout, message, Alert } from "antd";
 import useDebounce from "../../hooks/useDebounce";
 import { useCategories } from "../../hooks/useCategories";
 import { useCountries } from "../../hooks/useCountries";
@@ -14,6 +13,7 @@ import AppFooter from "../footer/AppFooter";
 import MovieSection from "./MovieSection";
 import ShowcaseCarousel from "./ShowcaseCarousel";
 import ChatWidget from "../chat-bot/ChatWidget";
+import SupportChatWidget from "../support-chat/SupportChatWidget";
 import { logout as logoutApi } from "../../services/authService";
 import { getAccessToken, logout as clearTokens } from "../../api/http";
 import {
@@ -35,8 +35,6 @@ import {
   hasAdminRole,
   storeUserRoles,
 } from "../../utils/auth";
-
-const { Content } = Layout;
 
 export default function MovieBrowser() {
   const navigate = useNavigate();
@@ -233,7 +231,7 @@ export default function MovieBrowser() {
               sortBy: "name",
               sortDescending: false,
             },
-            { signal: controller.signal }
+            { signal: controller.signal },
           );
 
           if (controller.signal.aborted) return;
@@ -271,7 +269,7 @@ export default function MovieBrowser() {
               countryId: activeCountry,
               q: trimmedQuery,
             },
-            { signal: controller.signal }
+            { signal: controller.signal },
           );
 
           if (controller.signal.aborted) return;
@@ -346,7 +344,7 @@ export default function MovieBrowser() {
           } else {
             const all = await getMovies({ signal: controller.signal });
             data = (all || []).filter((movie) =>
-              movie.name?.toLowerCase().includes(trimmedQuery.toLowerCase())
+              movie.name?.toLowerCase().includes(trimmedQuery.toLowerCase()),
             );
           }
         }
@@ -355,7 +353,7 @@ export default function MovieBrowser() {
           data = data.filter((movie) =>
             Array.isArray(movie.lstCategoryIds)
               ? movie.lstCategoryIds.includes(activeCategory)
-              : false
+              : false,
           );
         }
 
@@ -370,7 +368,7 @@ export default function MovieBrowser() {
           data = (byCountry || []).filter((movie) =>
             Array.isArray(movie.lstCategoryIds)
               ? movie.lstCategoryIds.includes(activeCategory)
-              : false
+              : false,
           );
         } else if (activeCountry != null) {
           data = await getMoviesByCountry(activeCountry, {
@@ -453,7 +451,7 @@ export default function MovieBrowser() {
         navigate("/admin/dashboard", { replace: true });
       }
     },
-    [navigate, refetchProfile]
+    [navigate, refetchProfile],
   );
 
   const handleChangePasswordSuccess = useCallback(() => {
@@ -494,13 +492,13 @@ export default function MovieBrowser() {
 
       return updateProfile(payload);
     },
-    [updateProfile]
+    [updateProfile],
   );
 
   const handleLogout = useCallback(async () => {
     try {
       await logoutApi();
-      message.success("Đăng xuất thành công!");
+      alert("Đăng xuất thành công!");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
@@ -515,7 +513,7 @@ export default function MovieBrowser() {
 
   const handleOrdersClick = useCallback(() => {
     if (!isLoggedIn) {
-      message.warning("Bạn cần đăng nhập để sử dụng tính năng Đơn hàng.");
+      alert("Bạn cần đăng nhập để sử dụng tính năng Đơn hàng.");
       openAuthModal("login");
       return;
     }
@@ -525,7 +523,7 @@ export default function MovieBrowser() {
 
   const handleChatClick = useCallback(() => {
     if (!isLoggedIn) {
-      message.warning("Bạn cần đăng nhập để trò chuyện với trợ lý AI.");
+      alert("Bạn cần đăng nhập để trò chuyện với trợ lý AI.");
       openAuthModal("login");
       return;
     }
@@ -602,8 +600,8 @@ export default function MovieBrowser() {
   const emptyMessage = hasActiveSearch
     ? `Không tìm thấy phim nào với từ khóa "${debouncedQuery}"`
     : activeCategory || activeCountry
-    ? "Không có phim cho bộ lọc hiện tại"
-    : "Không có phim trong danh mục này";
+      ? "Không có phim cho bộ lọc hiện tại"
+      : "Không có phim trong danh mục này";
 
   return (
     <div className="movie-browser">
@@ -656,15 +654,7 @@ export default function MovieBrowser() {
           />
         </div>
 
-        {error && (
-          <Alert
-            message="Lỗi"
-            description={String(error)}
-            type="error"
-            showIcon
-            style={{ marginBottom: 24 }}
-          />
-        )}
+        {error && <div className="error-message">{String(error)}</div>}
 
         <MovieSection
           title={sectionTitle}
@@ -718,6 +708,8 @@ export default function MovieBrowser() {
           isLoggedIn={isLoggedIn}
         />
       )}
+
+      <SupportChatWidget isLoggedIn={isLoggedIn} />
 
       <AppFooter />
     </div>

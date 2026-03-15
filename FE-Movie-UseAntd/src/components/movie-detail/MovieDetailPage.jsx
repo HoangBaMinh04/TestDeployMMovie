@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Layout, Button, message } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import { getAccessToken, logout as clearTokens } from "../../api/http";
 import HeaderBar from "../header/HeaderBar";
 import useUserProfile from "../../hooks/useUserProfile";
@@ -10,6 +8,7 @@ import UserProfileModal from "../profile/UserProfileModal";
 import OrdersModal from "../order/OrdersModal";
 import { useOrders } from "../../hooks/useOrders";
 import ChatWidget from "../chat-bot/ChatWidget";
+import SupportChatWidget from "../support-chat/SupportChatWidget";
 
 import {
   getComingSoonMovies,
@@ -61,7 +60,7 @@ import {
 
 function extractApiErrorMessage(
   error,
-  fallback = "Đã xảy ra lỗi. Vui lòng thử lại."
+  fallback = "Đã xảy ra lỗi. Vui lòng thử lại.",
 ) {
   if (!error) {
     return fallback;
@@ -84,7 +83,7 @@ function extractApiErrorMessage(
       messages.push(data.errors.filter(Boolean).join("; "));
     } else if (data?.errors && typeof data.errors === "object") {
       messages.push(
-        Object.values(data.errors).flat().filter(Boolean).join("; ")
+        Object.values(data.errors).flat().filter(Boolean).join("; "),
       );
     }
 
@@ -241,12 +240,12 @@ export default function MovieDetailPage() {
 
   const groupedShowtimes = useMemo(
     () => groupShowtimesByCinema(Array.isArray(showtimes) ? showtimes : []),
-    [showtimes]
+    [showtimes],
   );
 
   const dateOptions = useMemo(
     () => sortDateKeys(Array.from(groupedShowtimes.keys())),
-    [groupedShowtimes]
+    [groupedShowtimes],
   );
 
   const [activeDate, setActiveDate] = useState(null);
@@ -384,7 +383,7 @@ export default function MovieDetailPage() {
         return null;
       }
     },
-    [movieInternalId]
+    [movieInternalId],
   );
 
   const refreshReviewPermission = useCallback(async () => {
@@ -421,8 +420,8 @@ export default function MovieDetailPage() {
       setCanReviewError(
         extractApiErrorMessage(
           error,
-          "Không kiểm tra được quyền đánh giá. Vui lòng thử lại."
-        )
+          "Không kiểm tra được quyền đánh giá. Vui lòng thử lại.",
+        ),
       );
       return null;
     } finally {
@@ -575,22 +574,22 @@ export default function MovieDetailPage() {
           pageNumber,
           pageSize: reviewPageSize,
         },
-        { signal: controller.signal }
+        { signal: controller.signal },
       )
         .then((data) => {
           if (controller.signal.aborted) return;
 
           const items = Array.isArray(data?.items) ? data.items : [];
           setReviews((prev) =>
-            pageNumber === 1 ? items : [...prev, ...items]
+            pageNumber === 1 ? items : [...prev, ...items],
           );
           setReviewHasMore(
             Boolean(
               data?.hasNextPage ??
-                (data?.totalPages
-                  ? pageNumber < data.totalPages
-                  : items.length === reviewPageSize)
-            )
+              (data?.totalPages
+                ? pageNumber < data.totalPages
+                : items.length === reviewPageSize),
+            ),
           );
           setReviewPage(pageNumber);
         })
@@ -611,7 +610,7 @@ export default function MovieDetailPage() {
           }
         });
     },
-    [movieInternalId, reviewPageSize]
+    [movieInternalId, reviewPageSize],
   );
 
   useEffect(() => {
@@ -639,10 +638,10 @@ export default function MovieDetailPage() {
 
         if (!controller.signal.aborted) {
           setRelatedNowShowing(
-            Array.isArray(nowShowing) ? nowShowing.slice(0, 8) : []
+            Array.isArray(nowShowing) ? nowShowing.slice(0, 8) : [],
           );
           setRelatedComingSoon(
-            Array.isArray(comingSoon) ? comingSoon.slice(0, 8) : []
+            Array.isArray(comingSoon) ? comingSoon.slice(0, 8) : [],
           );
         }
       } catch (error) {
@@ -716,7 +715,7 @@ export default function MovieDetailPage() {
       }
 
       const trimmedContent = String(
-        payload?.content ?? payload?.Content ?? ""
+        payload?.content ?? payload?.Content ?? "",
       ).trim();
       if (trimmedContent.length < 20) {
         setSubmitReviewError("Nội dung đánh giá cần ít nhất 20 ký tự.");
@@ -725,8 +724,8 @@ export default function MovieDetailPage() {
       const trimmedTitle = payload?.title
         ? String(payload.title).trim()
         : payload?.Title
-        ? String(payload.Title).trim()
-        : null;
+          ? String(payload.Title).trim()
+          : null;
 
       if (mode === "create" && !movieInternalId) {
         setSubmitReviewError("Không xác định được phim để đánh giá.");
@@ -779,7 +778,7 @@ export default function MovieDetailPage() {
           error,
           mode === "edit"
             ? "Không cập nhật được đánh giá. Vui lòng thử lại."
-            : "Không gửi được đánh giá. Vui lòng thử lại."
+            : "Không gửi được đánh giá. Vui lòng thử lại.",
         );
         setSubmitReviewError(message);
         return false;
@@ -795,7 +794,7 @@ export default function MovieDetailPage() {
       myReview,
       refreshReviewPermission,
       refreshReviewStats,
-    ]
+    ],
   );
 
   const handleVoteHelpful = useCallback(async (review) => {
@@ -842,12 +841,12 @@ export default function MovieDetailPage() {
           }
 
           return updated;
-        })
+        }),
       );
     } catch (error) {
       const message = extractApiErrorMessage(
         error,
-        "Không thể ghi nhận bình chọn hữu ích. Vui lòng thử lại."
+        "Không thể ghi nhận bình chọn hữu ích. Vui lòng thử lại.",
       );
       setHelpfulError(message);
     } finally {
@@ -866,7 +865,7 @@ export default function MovieDetailPage() {
 
     if (typeof window !== "undefined") {
       const confirmed = window.confirm(
-        "Bạn có chắc chắn muốn xoá đánh giá này không?"
+        "Bạn có chắc chắn muốn xoá đánh giá này không?",
       );
       if (!confirmed) {
         return false;
@@ -890,7 +889,7 @@ export default function MovieDetailPage() {
     } catch (error) {
       const message = extractApiErrorMessage(
         error,
-        "Không thể xoá đánh giá. Vui lòng thử lại."
+        "Không thể xoá đánh giá. Vui lòng thử lại.",
       );
       setDeleteReviewError(message);
       return false;
@@ -922,7 +921,7 @@ export default function MovieDetailPage() {
     if (reason == null && typeof window !== "undefined") {
       reason = window.prompt(
         "Lý do bạn muốn báo cáo bình luận này là gì?",
-        "Nội dung không phù hợp"
+        "Nội dung không phù hợp",
       );
     }
 
@@ -950,13 +949,13 @@ export default function MovieDetailPage() {
         description,
       });
       setReportSuccess(
-        "Cảm ơn bạn đã báo cáo. Chúng tôi sẽ xem xét đánh giá này."
+        "Cảm ơn bạn đã báo cáo. Chúng tôi sẽ xem xét đánh giá này.",
       );
       return true;
     } catch (error) {
       const message = extractApiErrorMessage(
         error,
-        "Không thể gửi báo cáo. Vui lòng thử lại."
+        "Không thể gửi báo cáo. Vui lòng thử lại.",
       );
       setReportError(message);
       return false;
@@ -1000,7 +999,7 @@ export default function MovieDetailPage() {
       refreshReviewPermission().catch(() => {});
       loadReviews(1);
     },
-    [loadReviews, navigate, refetchProfile, refreshReviewPermission]
+    [loadReviews, navigate, refetchProfile, refreshReviewPermission],
   );
 
   const handleChangePasswordSuccess = useCallback(() => {
@@ -1035,7 +1034,7 @@ export default function MovieDetailPage() {
 
       return updateProfile(payload);
     },
-    [updateProfile]
+    [updateProfile],
   );
 
   const handleLogout = useCallback(async () => {
@@ -1126,14 +1125,14 @@ export default function MovieDetailPage() {
   const averageRating = pickAverageRating(safeMovie, reviewStats);
   const reviewCount = pickReviewCount(safeMovie, reviewStats);
   const runtime = formatRuntime(
-    safeMovie?.duration || safeMovie?.runtime || safeMovie?.length
+    safeMovie?.duration || safeMovie?.runtime || safeMovie?.length,
   );
   const categories = formatCategories(safeMovie);
   const releaseYear = formatReleaseYear(safeMovie);
   const trailerLink = getTrailerLink(safeMovie);
   const trailerEmbedUrl = useMemo(
     () => resolveTrailerEmbedUrl(trailerLink),
-    [trailerLink]
+    [trailerLink],
   );
   const actors = extractActors(safeMovie);
   const directors = extractDirectors(safeMovie);
@@ -1209,14 +1208,13 @@ export default function MovieDetailPage() {
 
       <main className="movie-detail-content">
         <div className="movie-detail-container">
-          <Button
-            type="text"
-            icon={<ArrowLeftOutlined />}
+          <button
+            type="button"
+            className="movie-detail-back"
             onClick={handleBack}
-            style={{ marginBottom: 16, padding: 0, color: "rgba(255,255,255,0.85)" }}
           >
-            Quay lại
-          </Button>
+            ← Quay lại
+          </button>
 
           <MovieDetailHero
             movie={movie}
@@ -1337,6 +1335,9 @@ export default function MovieDetailPage() {
           isLoggedIn={isLoggedIn}
         />
       )}
+
+      <SupportChatWidget isLoggedIn={isLoggedIn} />
+
       <AppFooter />
     </div>
   );

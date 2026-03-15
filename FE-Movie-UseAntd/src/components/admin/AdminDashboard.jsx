@@ -30,6 +30,7 @@ import {
   StarOutlined,
   FolderOpenOutlined,
   GlobalOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -66,6 +67,7 @@ import ShowtimeManagementPanel from "./ShowtimeManagementPanel";
 import SeatManagementPanel from "./SeatManagement.Panel";
 import PriceRuleManagementPanel from "./PriceRuleManagementPanel";
 import ReviewManagementPanel from "./ReviewManagementPanel";
+import SupportChatPanel from "./SupportChatPanel";
 
 // Chart.js setup
 import {
@@ -91,7 +93,7 @@ ChartJS.register(
   ChartTitle,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 /* ================================= */
 
@@ -155,6 +157,8 @@ function resolveSectionFromPath(pathname) {
     return "pricerules";
   if (normalized.startsWith("/admin/dashboard/review-manager"))
     return "reviews";
+  if (normalized.startsWith("/admin/dashboard/support-chat"))
+    return "supportchat";
   return "dashboard";
 }
 
@@ -402,7 +406,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [authorized, setAuthorized] = useState(() =>
-    hasAdminRole(loadUserRoles())
+    hasAdminRole(loadUserRoles()),
   );
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [summary, setSummary] = useState(DEFAULT_DASHBOARD_SUMMARY);
@@ -410,7 +414,7 @@ export default function AdminDashboard() {
   const [movieStats, setMovieStats] = useState(DEFAULT_MOVIE_STATS);
   const [movieTrend, setMovieTrend] = useState(DEFAULT_MOVIE_TREND);
   const [salesDistribution, setSalesDistribution] = useState(
-    DEFAULT_SALES_DISTRIBUTION
+    DEFAULT_SALES_DISTRIBUTION,
   );
   const [loading, setLoading] = useState(true);
   const [overviewError, setOverviewError] = useState("");
@@ -423,7 +427,7 @@ export default function AdminDashboard() {
   const [distributionTop, setDistributionTop] = useState(5);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [activeSection, setActiveSection] = useState(() =>
-    resolveSectionFromPath(location.pathname)
+    resolveSectionFromPath(location.pathname),
   );
   const [collapsed, setCollapsed] = useState(false);
 
@@ -516,6 +520,13 @@ export default function AdminDashboard() {
         subtitle: "Kiểm soát các đánh giá, điều chỉnh các đánh giá phù hợp",
       };
     }
+    if (activeSection === "supportchat") {
+      return {
+        title: "Chat hỗ trợ khách hàng",
+        subtitle:
+          "Trò chuyện trực tuyến, hỗ trợ và giải đáp thắc mắc của khách hàng.",
+      };
+    }
     return {
       title: "Dashboard",
       subtitle: "Tổng quan hiệu suất hệ thống đặt vé phim.",
@@ -602,14 +613,20 @@ export default function AdminDashboard() {
         icon: <GlobalOutlined />,
         interactive: true,
       },
+      {
+        key: "supportchat",
+        label: "Chat hỗ trợ",
+        icon: <MessageOutlined />,
+        interactive: true,
+      },
     ],
-    []
+    [],
   );
 
   useEffect(() => {
     const nextSection = resolveSectionFromPath(location.pathname);
     setActiveSection((current) =>
-      current === nextSection ? current : nextSection
+      current === nextSection ? current : nextSection,
     );
   }, [location.pathname]);
 
@@ -643,6 +660,8 @@ export default function AdminDashboard() {
       return go("/admin/dashboard/price-rule-manager", "pricerules");
     if (sectionKey === "reviews")
       return go("/admin/dashboard/review-manager", "reviews");
+    if (sectionKey === "supportchat")
+      return go("/admin/dashboard/support-chat", "supportchat");
 
     if (activeSection !== "dashboard") setActiveSection("dashboard");
     if (location.pathname.toLowerCase() !== "/admin/dashboard")
@@ -763,7 +782,7 @@ export default function AdminDashboard() {
           err?.response?.data?.message ||
             err?.response?.data?.error ||
             err?.message ||
-            SALES_ERROR_MESSAGE
+            SALES_ERROR_MESSAGE,
         );
       }
     }
@@ -800,7 +819,7 @@ export default function AdminDashboard() {
           err?.response?.data?.message ||
             err?.response?.data?.error ||
             err?.message ||
-            MOVIE_TREND_ERROR_MESSAGE
+            MOVIE_TREND_ERROR_MESSAGE,
         );
       }
     }
@@ -838,7 +857,7 @@ export default function AdminDashboard() {
           err?.response?.data?.message ||
             err?.response?.data?.error ||
             err?.message ||
-            SALES_DISTRIBUTION_ERROR_MESSAGE
+            SALES_DISTRIBUTION_ERROR_MESSAGE,
         );
       }
     }
@@ -889,7 +908,7 @@ export default function AdminDashboard() {
         accent: "orange",
       },
     ],
-    [summary]
+    [summary],
   );
 
   const menuItems = navItems.map((item) => ({
@@ -1205,7 +1224,7 @@ export default function AdminDashboard() {
                   <Text type="secondary" style={{ fontSize: 12 }}>
                     {lastUpdated
                       ? `Cập nhật lần cuối: ${lastUpdated.toLocaleString(
-                          "vi-VN"
+                          "vi-VN",
                         )}`
                       : "Đang tải dữ liệu gần nhất..."}
                   </Text>
@@ -1225,6 +1244,7 @@ export default function AdminDashboard() {
             {activeSection === "seats" && <SeatManagementPanel />}
             {activeSection === "pricerules" && <PriceRuleManagementPanel />}
             {activeSection === "reviews" && <ReviewManagementPanel />}
+            {activeSection === "supportchat" && <SupportChatPanel />}
           </Content>
         </Layout>
 
