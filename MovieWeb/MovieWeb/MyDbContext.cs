@@ -38,6 +38,10 @@ namespace MovieWeb
 
         // Gemini Chatbot
         public DbSet<ChatHistory> ChatHistories { get; set; }
+
+        // Support Chat (Realtime Customer Admin)
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<ConversationMessage> ConversationMessages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -426,6 +430,48 @@ namespace MovieWeb
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(e => new { e.UserId, e.CreatedAt });
+            });
+
+
+            // ==================== SUPPORT CHAT (Realtime) ====================
+
+            // Conversation
+            modelBuilder.Entity<Conversation>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Customer)
+                      .WithMany()
+                      .HasForeignKey(e => e.CustomerId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.AssignedAdmin)
+                      .WithMany()
+                      .HasForeignKey(e => e.AssignedAdminId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasIndex(e => new { e.CustomerId, e.Status });
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.LastMessageAt);
+            });
+
+            // ConversationMessage
+            modelBuilder.Entity<ConversationMessage>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Conversation)
+                      .WithMany(c => c.Messages)
+                      .HasForeignKey(e => e.ConversationId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Sender)
+                      .WithMany()
+                      .HasForeignKey(e => e.SenderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.ConversationId, e.CreatedAt });
+                entity.HasIndex(e => new { e.ConversationId, e.IsRead });
             });
         }
     }

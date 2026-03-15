@@ -7,6 +7,7 @@ using MovieWeb;
 using MovieWeb.Entities;
 using MovieWeb.Extensions;
 using MovieWeb.Hubs;
+using MovieWeb.Hubs;
 using MovieWeb.Serialization;
 using MovieWeb.Service.Tmdb;
 using System.Text;
@@ -66,6 +67,22 @@ builder.Services
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
         };
     })
     .AddBearerToken(IdentityConstants.BearerScheme); // Giữ lại cho Identity API

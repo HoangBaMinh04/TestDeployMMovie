@@ -70,6 +70,12 @@ namespace MovieWeb.Extensions
             // Gemini Chatbot
             services.AddHttpClient<IChatbotService, GeminiChatbotService>();
 
+            // Support Chat Realtime (Customer Admin)
+            services.AddScoped<ISupportChatAppService, SupportChatAppService>();
+
+            // SignalR
+            services.AddSignalR();
+
             // Tmdb public api để lấy poster chỉ cần nhập tên, số năm và để trống link url nó sẽ tự tìm
             services.AddHttpClient<ITmdbClient, TmdbClient>();
 

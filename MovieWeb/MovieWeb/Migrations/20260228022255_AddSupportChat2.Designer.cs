@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieWeb;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieWeb.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228022255_AddSupportChat2")]
+    partial class AddSupportChat2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,99 +345,98 @@ namespace MovieWeb.Migrations
                 });
 
             modelBuilder.Entity("MovieWeb.Entities.Conversation", b =>
-            {
-                b.Property<long>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("bigint");
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
 
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                b.Property<long?>("AssignedAdminId")
-                    .HasColumnType("bigint");
+                    b.Property<long?>("AssignedAdminId")
+                        .HasColumnType("bigint");
 
-                b.Property<DateTime?>("ClosedAt")
-                    .HasColumnType("timestamp without time zone");
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp without time zone");
 
-                b.Property<DateTime>("CreatedAt")
-                    .HasColumnType("timestamp without time zone");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
 
-                b.Property<long>("CustomerId")
-                    .HasColumnType("bigint");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
 
-                b.Property<DateTime?>("LastMessageAt")
-                    .HasColumnType("timestamp without time zone");
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("timestamp without time zone");
 
-                b.Property<string>("LastMessagePreview")
-                    .HasMaxLength(500)
-                    .HasColumnType("character varying(500)");
+                    b.Property<string>("LastMessagePreview")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                b.Property<int>("Status")
-                    .HasColumnType("integer");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
-                b.Property<string>("Subject")
-                    .HasMaxLength(200)
-                    .HasColumnType("character varying(200)");
+                    b.Property<string>("Subject")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                b.Property<int>("UnreadByAdminCount")
-                    .HasColumnType("integer");
+                    b.Property<int>("UnreadByAdminCount")
+                        .HasColumnType("integer");
 
-                b.Property<int>("UnreadByCustomerCount")
-                    .HasColumnType("integer");
+                    b.Property<int>("UnreadByCustomerCount")
+                        .HasColumnType("integer");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("AssignedAdminId");
+                    b.HasIndex("AssignedAdminId");
 
-                b.HasIndex("LastMessageAt");
+                    b.HasIndex("LastMessageAt");
 
-                b.HasIndex("Status");
+                    b.HasIndex("Status");
 
-                b.HasIndex("CustomerId", "Status");
+                    b.HasIndex("CustomerId", "Status");
 
-                b.ToTable("Conversations", "public");
-            });
+                    b.ToTable("Conversations", "public");
+                });
 
             modelBuilder.Entity("MovieWeb.Entities.ConversationMessage", b =>
-            {
-                b.Property<long>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("bigint");
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
 
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                b.Property<string>("Content")
-                    .IsRequired()
-                    .HasMaxLength(4000)
-                    .HasColumnType("character varying(4000)");
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
 
-                b.Property<long>("ConversationId")
-                    .HasColumnType("bigint");
+                    b.Property<long>("ConversationId")
+                        .HasColumnType("bigint");
 
-                b.Property<DateTime>("CreatedAt")
-                    .HasColumnType("timestamp without time zone");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
 
-                b.Property<bool>("IsRead")
-                    .HasColumnType("boolean");
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean");
 
-                b.Property<long>("SenderId")
-                    .HasColumnType("bigint");
+                    b.Property<long>("SenderId")
+                        .HasColumnType("bigint");
 
-                b.Property<string>("SenderRole")
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .HasColumnType("character varying(20)");
+                    b.Property<string>("SenderRole")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("SenderId");
+                    b.HasIndex("SenderId");
 
-                b.HasIndex("ConversationId", "CreatedAt");
+                    b.HasIndex("ConversationId", "CreatedAt");
 
-                b.HasIndex("ConversationId", "IsRead");
+                    b.HasIndex("ConversationId", "IsRead");
 
-                b.ToTable("ConversationMessages", "public");
-            });
-
+                    b.ToTable("ConversationMessages", "public");
+                });
 
             modelBuilder.Entity("MovieWeb.Entities.Country", b =>
                 {
@@ -1301,6 +1303,43 @@ namespace MovieWeb.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MovieWeb.Entities.Conversation", b =>
+                {
+                    b.HasOne("MovieWeb.Entities.AppUser", "AssignedAdmin")
+                        .WithMany()
+                        .HasForeignKey("AssignedAdminId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MovieWeb.Entities.AppUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedAdmin");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("MovieWeb.Entities.ConversationMessage", b =>
+                {
+                    b.HasOne("MovieWeb.Entities.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieWeb.Entities.AppUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("MovieWeb.Entities.Movie", b =>
                 {
                     b.HasOne("MovieWeb.Entities.Country", "Country")
@@ -1559,6 +1598,11 @@ namespace MovieWeb.Migrations
                     b.Navigation("Rooms");
 
                     b.Navigation("Showtimes");
+                });
+
+            modelBuilder.Entity("MovieWeb.Entities.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("MovieWeb.Entities.Country", b =>
