@@ -17,6 +17,7 @@ using MovieWeb.Service.Review;
 using MovieWeb.Service.Room;
 using MovieWeb.Service.Seat;
 using MovieWeb.Service.Showtime;
+using MovieWeb.Service.SupportChat;
 using MovieWeb.Service.Tmdb;
 using MovieWeb.Service.UserManagement;
 using MovieWeb.Service.UserProfile;
